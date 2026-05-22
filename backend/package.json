@@ -5,12 +5,15 @@
   "private": true,
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "start": "bun run src/index.ts"
+    "build": "node ./node_modules/typescript/bin/tsc --outDir dist",
+    "start": "node dist/index.js"
   },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6"
+    "@types/express": "^5.0.6",
+    "tsx": "^4.19.2",
+    "typescript": "^5.4.5"
   },
   "peerDependencies": {
     "typescript": "^5"
