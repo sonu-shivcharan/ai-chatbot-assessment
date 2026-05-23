@@ -1,73 +1,66 @@
-# React + TypeScript + Vite
+# Frontend Application Setup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend is a single-page React app configured with Vite, TypeScript, and TailwindCSS. It serves as the chat interface and includes a metrics dashboard.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 1. Prerequisites
+* [Node.js](https://nodejs.org) (v18+ recommended) or [Bun](https://bun.sh)
+* Ensure that the backend service is running on [http://localhost:3000](http://localhost:3000) so the client can perform API fetches.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 2. Installation
 
-## Expanding the ESLint configuration
+Install frontend dependencies:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Using Bun
+```bash
+bun install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Using Node.js / NPM
+```bash
+npm install
 ```
+
+---
+
+## 3. Running the Development Server
+
+Start the Vite hot-reloading development server:
+
+### Using Bun
+```bash
+bun run dev
+```
+
+### Using NPM
+```bash
+npm run dev
+```
+
+By default, the application will boot on [http://localhost:5173](http://localhost:5173) (or fallback to port `5174` if port 5173 is already in use). Open this URL in your web browser.
+
+---
+
+## 4. Production Build & Preview
+
+To build and run the static production bundle locally:
+
+### 1. Build the production assets
+Compiles TypeScript and creates optimized static assets in the `/dist` directory:
+```bash
+bun run build
+# OR using NPM
+npm run build
+```
+
+### 2. Preview the production build locally
+Hosts the built static assets on a local Vite preview server:
+```bash
+bun run preview
+# OR using NPM
+npm run preview
+```
+The preview will start on [http://localhost:4173](http://localhost:4173).
