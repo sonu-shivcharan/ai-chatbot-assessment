@@ -35,6 +35,18 @@ export function useChatState() {
 
   const isStreaming = streamingContent !== "";
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const handleCancelStream = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    setStreamingContent("");
+    setMessages((prev) => prev.filter((m) => m._id !== "temp-user"));
+  };
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom of messages
@@ -172,6 +184,9 @@ export function useChatState() {
     const activeId = activeConversationId;
     let accumulatedContent = "";
 
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       await sendMessageStream(
         {
@@ -189,6 +204,7 @@ export function useChatState() {
           },
           onDone: ({ conversation, userMessage, assistantMessage }) => {
             setStreamingContent("");
+            abortControllerRef.current = null;
 
             // Update active conversation states
             loadedConversationIdRef.current = conversation._id;
@@ -217,21 +233,29 @@ export function useChatState() {
             });
           },
           onError: (err) => {
+            if (controller.signal.aborted) {
+              console.log("[useChatState] Chat stream aborted by user.");
+              return;
+            }
             console.error(err);
             setErrorMsg(err);
             setIsLoading(false);
             setStreamingContent("");
             // remove user message placeholder if it failed completely
             setMessages((prev) => prev.filter((m) => m._id !== "temp-user"));
+            abortControllerRef.current = null;
           },
         },
+        controller.signal,
       );
     } catch (err: unknown) {
+      if (controller.signal.aborted) return;
       console.error(err);
       const message = err instanceof Error ? err.message : String(err);
       setErrorMsg(message || "Failed to establish chat stream.");
       setIsLoading(false);
       setMessages((prev) => prev.filter((m) => m._id !== "temp-user"));
+      abortControllerRef.current = null;
     }
   };
 
@@ -255,5 +279,6 @@ export function useChatState() {
     handleSendMessage,
     handleProviderChange,
     setModel,
+    handleCancelStream,
   };
 }

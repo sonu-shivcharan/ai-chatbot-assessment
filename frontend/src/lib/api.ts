@@ -82,6 +82,7 @@ export async function sendMessageStream(
     temperature?: number;
   },
   handlers: StreamHandlers,
+  signal?: AbortSignal,
 ): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/chats/message`, {
@@ -93,6 +94,7 @@ export async function sendMessageStream(
         ...payload,
         stream: true,
       }),
+      signal,
     });
 
     if (!response.ok) {

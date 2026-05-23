@@ -1,4 +1,4 @@
-import { MessageSquare, Plus, Bot, X, BarChart2 } from "lucide-react";
+import { MessageSquare, Plus, Bot, X, BarChart2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@/context/ChatContext";
@@ -12,6 +12,7 @@ export function Sidebar() {
     isSidebarOpen,
     setIsSidebarOpen,
     startNewChat,
+    handleDeleteConversation,
   } = useChat();
 
   const navigate = useNavigate();
@@ -115,6 +116,14 @@ export function Sidebar() {
                       />
                       <span className="truncate font-medium">{chat.title}</span>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      onClick={(e) => handleDeleteConversation(e, chat._id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
                   </div>
                 );
               })

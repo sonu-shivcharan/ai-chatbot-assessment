@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Send } from "lucide-react";
+import { Send, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,12 +12,8 @@ import {
 import { useChat } from "@/context/ChatContext";
 
 const PROVIDER_MODELS = {
-  mock: [
-    { value: "mock-llama-3-8b", label: "Mock Llama 3 (8B)" },
-  ],
-  gemini: [
-    { value: "gemini-2.5-flash", label: "Gemini 2.5 Flash" },
-  ],
+  mock: [{ value: "mock-llama-3-8b", label: "Mock Llama 3 (8B)" }],
+  gemini: [{ value: "gemini-2.5-flash", label: "Gemini 2.5 Flash" }],
   groq: [
     { value: "llama-3.1-8b-instant", label: "Llama 3.1 8B Instant" },
     { value: "groq/compound", label: "Groq Compound" },
@@ -33,11 +29,12 @@ export function ChatInput() {
     handleProviderChange,
     setModel,
     handleSendMessage,
+    handleCancelStream,
   } = useChat();
 
   const [inputMessage, setInputMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputMessage.trim() || isLoading || isStreaming) return;
     handleSendMessage(inputMessage);
@@ -56,7 +53,9 @@ export function ChatInput() {
           {/* Provider Selector */}
           <Select
             value={provider}
-            onValueChange={(val: any) => handleProviderChange(val)}
+            onValueChange={(val: "mock" | "gemini" | "groq") =>
+              handleProviderChange(val)
+            }
             disabled={isLoading || isStreaming}
           >
             <SelectTrigger className="h-8 w-32 border-input bg-background text-foreground">
@@ -97,7 +96,7 @@ export function ChatInput() {
             type="text"
             placeholder={
               isLoading || isStreaming
-                ? "Generating reply..."
+                ? "Generating reply... (click X to cancel)"
                 : `Send a message using ${provider}...`
             }
             value={inputMessage}
@@ -106,14 +105,26 @@ export function ChatInput() {
             className="flex-1 border-none bg-transparent py-6 px-4 text-[15px] focus-visible:ring-0 placeholder:text-muted-foreground text-foreground"
           />
           <div className="flex items-center gap-2 pr-3">
-            <Button
-              type="submit"
-              size="icon"
-              disabled={!inputMessage.trim() || isLoading || isStreaming}
-              className="h-9 w-9 rounded-lg transition-all active:scale-95 shrink-0"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+            {isLoading || isStreaming ? (
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                onClick={handleCancelStream}
+                className="h-9 w-9 rounded-lg transition-all active:scale-95 shrink-0 cursor-pointer"
+              >
+                <Square className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                size="icon"
+                disabled={!inputMessage.trim() || isLoading || isStreaming}
+                className="h-9 w-9 rounded-lg transition-all active:scale-95 shrink-0 cursor-pointer"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </form>
 
