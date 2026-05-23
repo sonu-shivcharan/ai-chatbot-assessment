@@ -42,7 +42,7 @@ export function Sidebar() {
               <Bot className="h-5 w-5" />
             </div>
             <span className="font-semibold text-lg tracking-tight">
-              AntiChat SDK
+              AI Chat
             </span>
           </div>
           <Button
@@ -83,9 +83,9 @@ export function Sidebar() {
         </div>
 
         {/* RECENT CONVERSATIONS LIST */}
-        <ScrollArea className="flex-1 px-4 py-2">
+        <ScrollArea className="flex-1">
           <div className="space-y-1">
-            <h3 className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+            <h3 className=" text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 p-2">
               Recent Chats
             </h3>
             {conversations.length === 0 ? (
@@ -102,7 +102,7 @@ export function Sidebar() {
                       setActiveConversationId(chat._id);
                       setIsSidebarOpen(true); // Close drawer on mobile
                     }}
-                    className={`group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-all duration-150 cursor-pointer ${
+                    className={`group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm transition-all duration-150 cursor-pointer md:w-[95%] mx-auto ${
                       isActive
                         ? "bg-accent text-accent-foreground shadow-sm border"
                         : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
